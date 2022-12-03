@@ -1,0 +1,1 @@
+Hi! This is my first time to participate in the Advent Of Code challenge.
