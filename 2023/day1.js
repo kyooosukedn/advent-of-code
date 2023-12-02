@@ -1,28 +1,18 @@
-// 
-//
-const fs = require('fs');
-const filePath = './firstDayInput.txt';
+const fs = require("fs");
 
-fs.readFile(filePath, 'utf8', (err, data) => {
-  if (err) {
-    console.error("Error: ", err);
-    return;
-  }
+let data = fs.readFileSync("./firstDayInput.txt", { encoding: "utf8" });
 
-  const lines = data.split("\n");
-
-  let totalSum = 0;
-  lines.forEach(line => {
-    const numbers = line.match(/\d/g);
-    console.log(numbers);
-    if (numbers && numbers.length >= 2) {
-      const firstDigit = numbers[0];
-      const lastDigit = parseInt(numbers[numbers.length - 1]);
-      const calibrationValue = parseInt(`${firstDigit}${lastDigit}`);
-      totalSum += calibrationValue;
-    }
-  });
-
-  console.log(totalSum);
+data = data.split("\n");
+let total = 0;
+data.forEach((line) => {
+  const numbers = line
+    .split("")
+    .filter((char) => Number(char))
+    .join("");
+  const [firstDigit = 0, lastDigit = 0] = [numbers[0], numbers[numbers.length - 1]];
+  total += Number(firstDigit + lastDigit);
 });
+
+console.log(total); //56397
+
 
