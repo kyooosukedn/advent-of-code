@@ -2,67 +2,56 @@ const fs = require('fs');
 
 const input = fs.readFileSync("./thirdDayInput.txt", { encoding: "utf-8" });
 
-// sum of all part numbers
+function parse(s) {
+  const entities = [];
+  for (const [y, line] of s.split('\n').entries()) {
+    for (const m of line.matchAll(/\d+/g))
+      entities.push({ type: 'number', x: m.index, y, token: m[0], value: +m[0] });
 
-
-// clean the input, . doesn't count as symbol
-// adjacent
-// parse the engine schematic
-
-function parseEngineSchematic(input) {
-  // Split the input string into an array of lines
-  const lines = input.split('\n');
-
-  // Split each line into an array of characters
-  return lines.map(line => line.split(''));
-}
-
-function isSymbol(char) {
-  // check adjacency from symbols that are created here
-  const symbols = new Set(["*", "#", "$", "+", "!", "@", "%", "^", "&", "(", ")", "=", "~", "-"]);
-  return symbols.has(symbols);
-}
-
-function isPartNumber(engine, row, col) {
-  const directions = [
-    [-1, -1], [-1, 0], [0, 1],
-    [-1, 1], [1, -1], [1, 0], [1, 1], [0, -1]
-  ];
-
-  for (const [diagonalRow, diagonalColumn] of directions) {
-    const newRow = row + diagonalRow;
-    const newColumn = col + diagonalColumn;
-
-    // check if the adjacent position is within the array bounds
-    if (newRow >= 0 && newRow < engine.length &&
-      newColumn >= 0 && newColumn < engine[newRow].length) {
-      if (isSymbol(engine[newRow][newColumn])) {
-        return true;
-      }
-    }
-    return false;
+    for (const m of line.matchAll(/[^0-9\.]/g))
+      entities.push({ type: 'symbol', x: m.index, y, token: m[0] });
   }
-
+  return entities;
 }
 
-function sumPartNumbers(engine) {
-  let sum = 0;
-
-  for (let row = 0; row < engine.length; row++) {
-    for (let col = 0; col < engine[row].length; col++) {
-      const currentChar = engine[row][col];
-      console.log(isPartNumber(engine, row, col));
-      if (!isSymbol(currentChar) && isPartNumber(engine, row, col)) {
-        sum += parseInt(currentChar, 10);
-        console.log(sum);
-      }
-    }
-  }
-  return sum;
-
+function adjacent(numberEntity, symbolEntity) {
+  const x0 = numberEntity.x - 1;
+  const x1 = numberEntity.x + numberEntity.token.length;
+  const y0 = numberEntity.y - 1;
+  const y1 = numberEntity.y + 1;
+  return (
+    symbolEntity.x >= x0 &&
+    symbolEntity.x <= x1 &&
+    symbolEntity.y >= y0 &&
+    symbolEntity.y <= y1
+  );
 }
-const engineSchematic = parseEngineSchematic(input);
 
-const res = sumPartNumbers(engineSchematic);
-console.log(res);
+function part1(entities) {
+  const numbers = entities.filter((e) => e.type === 'number');
+  const symbols = entities.filter((e) => e.type === 'symbol');
+
+  return numbers
+    .filter((n) => symbols.some((s) => adjacent(n, s)))
+    .map((n) => n.value)
+    .reduce((a, b) => a + b, 0);
+}
+
+function part2(entities) {
+  const numbers = entities.filter((e) => e.type === 'number');
+  const symbols = entities.filter((e) => e.type === 'symbol');
+
+  return symbols.filter(symbol => symbol.token === '*')
+    .map((symbol) => {
+      const adjacentNumbers = numbers.filter((number) => adjacent(number, symbol)).map((n) => n.value)
+      return adjacentNumbers.length === 2 ? adjacentNumbers[0] * adjacentNumbers[1] : 0
+    })
+    .reduce((a, b) => a + b, 0)
+}
+
+const entities = parse(input);
+const resPart1 = part1(entities);
+const resPart2 = part2(entities);
+console.log(resPart1);
+console.log(resPart2);
 
