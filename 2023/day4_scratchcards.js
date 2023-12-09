@@ -35,3 +35,5 @@ const contents = input.split("\n").map(x => {
 
 console.log("Sum of Points:", contents);
 
+
+
