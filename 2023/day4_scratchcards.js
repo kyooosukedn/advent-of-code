@@ -11,17 +11,21 @@ function toDict(numbers) {
 }
 
 
-const contents = input.split("\n").map(x => {
+const contents = input.split("\n").filter(x => x.length).map(x => {
   const values = x.split(":")[1];
   console.log("values", values);
-  const [winningNumbers, totalNums] = values.split("|").map(x => x.trim());
-  const wDict = toDict(winningNumbers);
+  const [winningNumbers, totalNums] = values.split("|");
+  const winningData = winningNumbers.split(" ").filter(x => x);
+  console.log(winningData);
+  const winningDict = toDict(winningData.map(x => parseInt(x)));
 
-  return [wDict, totalNums.split(" ").map(x => parseInt(x.trim()))];
-}).reduce((acc, [wDict, totalNums]) => {
+  console.log(winningDict);
+
+  return [winningDict, totalNums.split(" ").map(x => parseInt(x.trim()))];
+}).reduce((acc, [winningDict, totalNums]) => {
   let points = 0;
   totalNums.forEach(x => {
-    if (wDict[x]) {
+    if (winningDict[x]) {
       if (points === 0) {
         points = 1;
       } else {
@@ -30,7 +34,7 @@ const contents = input.split("\n").map(x => {
     }
   });
 
-  return acc;
+  return acc + points;
 }, 0);
 
 console.log("Sum of Points:", contents);
