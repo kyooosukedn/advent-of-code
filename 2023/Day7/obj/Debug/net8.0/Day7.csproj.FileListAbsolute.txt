@@ -1,0 +1,5 @@
+/home/kyo/Projects/advent-of-code/2023/Day7/obj/Debug/net8.0/Day7.GeneratedMSBuildEditorConfig.editorconfig
+/home/kyo/Projects/advent-of-code/2023/Day7/obj/Debug/net8.0/Day7.AssemblyInfoInputs.cache
+/home/kyo/Projects/advent-of-code/2023/Day7/obj/Debug/net8.0/Day7.AssemblyInfo.cs
+/home/kyo/Projects/advent-of-code/2023/Day7/obj/Debug/net8.0/Day7.csproj.CoreCompileInputs.cache
+/home/kyo/Projects/advent-of-code/2023/Day7/obj/Debug/net8.0/Day7.sourcelink.json
